@@ -1,5 +1,19 @@
 <template>
   <view class="container">
+    <view class="menu">
+      <uni-segmented-control
+        :current="current"
+        :values="values"
+        @clickItem="onClickItem"
+        styleType="button"
+        activeColor="#4cd964"
+      ></uni-segmented-control>
+      <view class="content">
+        <view v-show="current === 0"> 选项卡1的内容 </view>
+        <view v-show="current === 1"> 选项卡2的内容 </view>
+        <view v-show="current === 2"> 选项卡3的内容 </view>
+      </view>
+    </view>
     <view class="layout">
       <view class="box" v-for="item in pets" :key="item._id">
         <view class="pic">
@@ -29,9 +43,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { onReachBottom, onPullDownRefresh } from "@dcloudio/uni-app";
 const pets = ref([]);
+const current = ref(0);
+const classify = [
+  { key: "all", value: "全部" },
+  { key: "cat", value: "猫猫" },
+  { key: "dog", value: "狗狗" },
+];
+const values = computed(() => classify.map((item) => item.value));
 
 // 点击预览
 const onPreview = (e) => {
@@ -44,12 +65,20 @@ const onPreview = (e) => {
 };
 // 点击刷新
 const onRefresh = function () {
-  uni.startPullDownRefresh();
+  uni.onPullDownRefresh();
 };
 
 // 点击返回顶部
 const onTop = () => {
   uni.pageScrollTo({ scrollTop: 0, duration: 100 });
+};
+
+// 点击选项卡
+const onClickItem = (e) => {
+  console.log(e);
+  current.value = e.currentIndex;
+  pets.value = [];
+  network();
 };
 
 // 发送网络请求
@@ -64,6 +93,7 @@ function network() {
       },
       data: {
         size: 10,
+        type: classify[current.value].key,
       },
     })
     .then((res) => {
@@ -99,6 +129,7 @@ onReachBottom(() => {
 onPullDownRefresh(() => {
   console.log("下拉");
   pets.value = [];
+  current.value = 0;
   network();
 });
 
@@ -107,6 +138,9 @@ network();
 
 <style scoped>
 .container {
+  .menu {
+    padding: 50rpx 50rpx 0;
+  }
   .layout {
     padding: 50rpx;
     .box {
