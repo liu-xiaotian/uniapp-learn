@@ -8,11 +8,6 @@
         styleType="button"
         activeColor="#4cd964"
       ></uni-segmented-control>
-      <view class="content">
-        <view v-show="current === 0"> 选项卡1的内容 </view>
-        <view v-show="current === 1"> 选项卡2的内容 </view>
-        <view v-show="current === 2"> 选项卡3的内容 </view>
-      </view>
     </view>
     <view class="layout">
       <view class="box" v-for="item in pets" :key="item._id">
@@ -65,7 +60,7 @@ const onPreview = (e) => {
 };
 // 点击刷新
 const onRefresh = function () {
-  uni.onPullDownRefresh();
+  uni.startPullDownRefresh();
 };
 
 // 点击返回顶部
