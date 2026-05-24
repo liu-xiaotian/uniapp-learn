@@ -32,6 +32,7 @@ const onPreview = (e) => {
 
 // 发送网络请求
 function network() {
+  uni.showLoading();
   uni
     .request({
       url: "https://tea.qingnian8.com/tools/petShow",
@@ -40,8 +41,23 @@ function network() {
       },
     })
     .then((res) => {
-      console.log(res.data.data);
-      pets.value = res.data.data;
+      if (res.data.errCode === 0) {
+        pets.value = res.data.data;
+      } else if (res.data.errCode === 400) {
+        uni.showToast({
+          title: res.data.errMsg,
+          icon: "none",
+        });
+      }
+    })
+    .catch((err) => {
+      uni.showToast({
+        title: "网络请求失败,请稍后再试",
+        icon: "none",
+      });
+    })
+    .finally(() => {
+      uni.hideLoading();
     });
 }
 
