@@ -32,7 +32,8 @@ const onPreview = (e) => {
 
 // 发送网络请求
 function network() {
-  uni.showLoading();
+  // uni.showLoading();
+  uni.showNavigationBarLoading();
   uni
     .request({
       url: "https://tea.qingnian8.com/tools/petShow",
@@ -57,7 +58,8 @@ function network() {
       });
     })
     .finally(() => {
-      uni.hideLoading();
+      // uni.hideLoading();
+      uni.hideNavigationBarLoading();
     });
 }
 
