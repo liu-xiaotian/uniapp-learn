@@ -19,6 +19,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { onReachBottom, onPullDownRefresh } from "@dcloudio/uni-app";
 const pets = ref([]);
 
 const onPreview = (e) => {
@@ -43,7 +44,7 @@ function network() {
     })
     .then((res) => {
       if (res.data.errCode === 0) {
-        pets.value = res.data.data;
+        pets.value = [...pets.value, ...res.data.data];
       } else if (res.data.errCode === 400) {
         uni.showToast({
           title: res.data.errMsg,
@@ -60,8 +61,22 @@ function network() {
     .finally(() => {
       // uni.hideLoading();
       uni.hideNavigationBarLoading();
+	  uni.stopPullDownRefresh();
     });
 }
+
+// 触底加载更多
+onReachBottom(() => {
+  console.log("触底");
+  network();
+});
+
+// 下拉刷新
+onPullDownRefresh(() => {
+  console.log("下拉");
+  pets.value = []
+  network()
+});
 
 network();
 </script>
