@@ -15,8 +15,15 @@
       </view>
     </view>
     <view class="float">
-      <view class="item" @click="onRefresh">刷新</view>
-      <view class="item" @click="onTop">顶部</view>
+      <view class="item" @click="onRefresh">
+        <uni-icons type="refreshempty" size="26" color="#888"></uni-icons>
+      </view>
+      <view class="item" @click="onTop">
+        <uni-icons type="arrow-up" size="26" color="#888"></uni-icons>
+      </view>
+    </view>
+    <view class="loadMore">
+      <uni-load-more status="loading"></uni-load-more>
     </view>
   </view>
 </template>
@@ -52,6 +59,9 @@ function network() {
   uni
     .request({
       url: "https://tea.qingnian8.com/tools/petShow",
+      header: {
+        "access-key": "512669",
+      },
       data: {
         size: 10,
       },
@@ -121,6 +131,9 @@ network();
         font-size: 28rpx;
       }
     }
+  }
+  .loadMore {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 50rpx);
   }
   .float {
     position: fixed;
