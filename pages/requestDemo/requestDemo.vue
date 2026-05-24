@@ -14,6 +14,10 @@
         <view class="author">--- {{ item.author }}</view>
       </view>
     </view>
+    <view class="float">
+      <view class="item" @click="onRefresh">刷新</view>
+      <view class="item" @click="onTop">顶部</view>
+    </view>
   </view>
 </template>
 
@@ -22,6 +26,7 @@ import { ref } from "vue";
 import { onReachBottom, onPullDownRefresh } from "@dcloudio/uni-app";
 const pets = ref([]);
 
+// 点击预览
 const onPreview = (e) => {
   console.log(e);
   const urls = pets.value.map((item) => item.url);
@@ -29,6 +34,15 @@ const onPreview = (e) => {
     current: e,
     urls,
   });
+};
+// 点击刷新
+const onRefresh = function () {
+  uni.startPullDownRefresh();
+};
+
+// 点击返回顶部
+const onTop = () => {
+  uni.pageScrollTo({ scrollTop: 0, duration: 100 });
 };
 
 // 发送网络请求
@@ -61,7 +75,7 @@ function network() {
     .finally(() => {
       // uni.hideLoading();
       uni.hideNavigationBarLoading();
-	  uni.stopPullDownRefresh();
+      uni.stopPullDownRefresh();
     });
 }
 
@@ -74,8 +88,8 @@ onReachBottom(() => {
 // 下拉刷新
 onPullDownRefresh(() => {
   console.log("下拉");
-  pets.value = []
-  network()
+  pets.value = [];
+  network();
 });
 
 network();
@@ -106,6 +120,23 @@ network();
         color: #888;
         font-size: 28rpx;
       }
+    }
+  }
+  .float {
+    position: fixed;
+    right: 30rpx;
+    bottom: 80rpx;
+    padding-bottom: env(safe-area-inset-bottom); /* 适配iPhone底部安全区域 */
+    .item {
+      width: 90rpx;
+      height: 90rpx;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      margin-bottom: 20rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #eee;
     }
   }
 }
